@@ -1,6 +1,3 @@
-import math
-import json
-from datetime import datetime, timedelta
 from urllib.request import urlopen
 from xml.etree.ElementTree import parse
 from flask import Flask, render_template
