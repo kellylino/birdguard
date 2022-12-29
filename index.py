@@ -48,7 +48,3 @@ def webpage():
     drone_info = new_drone_info
 
     return render_template("table.html", len=len(drone_info), drone_info=drone_info, closest_distance=closest_distance)
-
-
-if __name__ == "__main__":
-    app.run()
