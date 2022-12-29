@@ -11,7 +11,28 @@
 <body>
 
 <h2></h2>
-<p>The closest distance in 10 minutes is {{deviceId}}</p>
+<p>The closest distance in 10 minutes is {{closest_distance}}</p>
+
+<table style="width:100%">
+    <tr>
+        <th>Time</th>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Distance</th>
+    </tr>
+    {% for i in range(0, len)%}
+    <tr>
+        <td>{{drone_info[i]["datetime"]}}</td>
+        <td>{{drone_info[i]["firstName"]}}</td>
+        <td>{{drone_info[i]["lastName"]}}</td>
+        <td>{{drone_info[i]["email"]}}</td>
+        <td>{{drone_info[i]["phoneNumber"]}}</td>
+        <td>{{drone_info[i]["distance"]}}</td>
+    </tr>
+    {%endfor%}
+</table>
 
 </body>
 </html>
