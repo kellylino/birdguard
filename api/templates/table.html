@@ -16,7 +16,7 @@
 
 <body>
 
-<h1 style="text-align: center">This webpage displays the pilots information who recently violated the NDZ perimeter in 10 minutes</h1>
+<h1 style="text-align: center">This webpage displays the pilots information who recently violated the NDZ perimeter within 10 minutes</h1>
 <hr>
 <p id="distance"></p>
 
@@ -59,8 +59,7 @@
             document.getElementById("distance").innerHTML = 'The closest confirmed distance to the nest was '
                 + '<strong>' + closest_distance + '</strong>' + ' meters';
             }else {
-                document.getElementById("demo").innerHTML = 'None';
-                document.getElementById("distance").innerHTML = 'There are no pilots violating the NDZ perimeter in 10 minutes yet';
+                document.getElementById("demo").innerHTML = 'There are no pilots violating the NDZ perimeter within 10 minutes yet';
             }
         };
         xhttp.open("GET", "/update");
