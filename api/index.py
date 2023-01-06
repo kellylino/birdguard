@@ -80,7 +80,3 @@ def update():
 _scheduler = BackgroundScheduler()
 _scheduler.add_job(service, "interval", seconds=2)
 _scheduler.start()
-
-
-if __name__ == '__main__':
-    app.run()
