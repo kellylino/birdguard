@@ -7,7 +7,7 @@
         border-collapse: collapse;
     }
     body {
-        background-color: antiquewhite;
+        background-color: darkseagreen;
         background-repeat: no-repeat;
         background-attachment: fixed;
         background-size: cover;
@@ -16,36 +16,34 @@
 
 <body>
 
-<h2></h2>
-<p style="color:darkslategray" id="distance">The closest distance between pilot and nest in 10 minutes was <strong> {{closest_distance}} </strong> meters</p>
+<h1 style="text-align: center">This webpage displays the pilots information who recently violated the NDZ perimeter in 10 minutes</h1>
 <hr>
-<br>
+<p id="distance">The closest confirmed distance to the nest was <strong> {{closest_distance}} </strong> meters</p>
 
 <table style="width:100%">
     <tr>
-        <th>Time</th>
+        <th>Snap Shot Time(UTC)</th>
         <th>Firstname</th>
         <th>Lastname</th>
         <th>Email</th>
         <th>Phone Number</th>
-        <th>Distance(meter)</th>
     </tr>
 
     <tbody id="demo">
     {% for i in range(0, len)%}
 
     <tr>
-        <td style="text-align:center;">{{drone_info[i]["datetime"]}}</td>
-        <td style="text-align:center;">{{drone_info[i]["firstName"]}}</td>
-        <td style="text-align:center;">{{drone_info[i]["lastName"]}}</td>
-        <td style="text-align:center;">{{drone_info[i]["email"]}}</td>
-        <td style="text-align:center;">{{drone_info[i]["phoneNumber"]}}</td>
-        <td style="text-align:center;">{{drone_info[i]["distance"]}}</td>
+        <td style="text-align:center;">{{pilot_info[i]["datetime"]}}</td>
+        <td style="text-align:center;">{{pilot_info[i]["firstName"]}}</td>
+        <td style="text-align:center;">{{pilot_info[i]["lastName"]}}</td>
+        <td style="text-align:center;">{{pilot_info[i]["email"]}}</td>
+        <td style="text-align:center;">{{pilot_info[i]["phoneNumber"]}}</td>
     </tr>
     {%endfor%}
     </tbody>
 
 </table>
+
 
 <script lang="JavaScript">
     setInterval(function () {
@@ -53,22 +51,21 @@
         xhttp.onload = function () {
             let data = JSON.parse(this.responseText);
 
-            let drone = data["drone_info"];
+            let pilot_info = data["pilot_info"];
             let closest_distance = data["closest_distance"];
 
             let text = '';
-            for (let i = 0; i < drone.length; i++){
+            for (let i = 0; i < pilot_info.length; i++){
                 text += '<tr>' +
-                    '<td style="text-align:center;">' + drone[i]["datetime"] + '</td>' +
-                    '<td style="text-align:center;">' + drone[i]["firstName"] + '</td>' +
-                    '<td style="text-align:center;">' + drone[i]["lastName"] + '</td>' +
-                    '<td style="text-align:center;">' + drone[i]["email"] + '</td>' +
-                    '<td style="text-align:center;">' + drone[i]["phoneNumber"] + '</td>' +
-                    '<td style="text-align:center;">' + drone[i]["distance"] + '</td>' +
+                    '<td style="text-align:center;">' + pilot_info[i]["datetime"] + '</td>' +
+                    '<td style="text-align:center;">' + pilot_info[i]["firstName"] + '</td>' +
+                    '<td style="text-align:center;">' + pilot_info[i]["lastName"] + '</td>' +
+                    '<td style="text-align:center;">' + pilot_info[i]["email"] + '</td>' +
+                    '<td style="text-align:center;">' + pilot_info[i]["phoneNumber"] + '</td>' +
                     '</tr>';
             }
             document.getElementById("demo").innerHTML = text;
-            document.getElementById("distance").innerHTML = 'The closest distance between pilot and nest in 10 minutes was '
+            document.getElementById("distance").innerHTML = 'The closest confirmed distance to the nest was '
                 + '<strong>' + closest_distance + '</strong>' + ' meters';
         };
         xhttp.open("GET", "/update");
