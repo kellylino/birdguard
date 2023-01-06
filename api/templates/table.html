@@ -59,7 +59,7 @@
             document.getElementById("distance").innerHTML = 'The closest confirmed distance to the nest was '
                 + '<strong>' + closest_distance + '</strong>' + ' meters';
             }else {
-                document.getElementById("demo").innerHTML = 'There are no pilots violating the NDZ perimeter within 10 minutes yet';
+                document.getElementById("distance").innerHTML = 'There are no pilots violating the NDZ perimeter within 10 minutes yet';
             }
         };
         xhttp.open("GET", "/update");
