@@ -41,10 +41,10 @@
         const xhttp = new XMLHttpRequest();
         xhttp.onload = function () {
             let data = JSON.parse(this.responseText);
-
             let pilot_info = data["pilot_info"];
             let closest_distance = data["closest_distance"];
 
+            if (pilot_info.length > 0){
             let text = '';
             for (let i = 0; i < pilot_info.length; i++){
                 text += '<tr>' +
@@ -58,6 +58,10 @@
             document.getElementById("demo").innerHTML = text;
             document.getElementById("distance").innerHTML = 'The closest confirmed distance to the nest was '
                 + '<strong>' + closest_distance + '</strong>' + ' meters';
+            }else {
+                document.getElementById("demo").innerHTML = 'None';
+                document.getElementById("distance").innerHTML = 'There are no pilots violating the NDZ perimeter in 10 minutes yet';
+            }
         };
         xhttp.open("GET", "/update");
         xhttp.send();
