@@ -17,7 +17,6 @@ closest_distance = 100
 data_lock = Lock()
 
 
-
 def service():
     print(time.ctime(), "Service")
 
