@@ -66,7 +66,7 @@ def service():
 @app.route('/')
 def webpage():
     with data_lock:
-        return render_template("table.html", len=len(pilot_info), pilot_info=pilot_info, closest_distance=closest_distance)
+        return render_template("table.html")
 
 
 @app.route('/update', methods=["GET"])
