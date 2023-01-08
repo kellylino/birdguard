@@ -12,7 +12,7 @@ from threading import Lock
 app = Flask(__name__)
 
 
-pilot_info = []
+pilot_info = {}
 closest_distance = 100
 data_lock = Lock()
 
@@ -25,8 +25,10 @@ def service():
         drone_url = urlopen('https://assignments.reaktor.com/birdnest/drones')
         report = parse(drone_url)
         capture = report.find("capture")
+        latest_snapshot_time = datetime.strptime(capture.get("snapshotTimestamp"), "%Y-%m-%dT%H:%M:%S.%fZ")
 
-        # find out the violated no drone zone rule pilots
+        # find out who violated no drone zone rule
+        mylist = []
         for drone in report.iterfind("capture/drone"):
             x = math.pow(abs(float(drone.findtext("positionX")) - 250000), 2) + math.pow(
                 abs(float(drone.findtext("positionY")) - 250000), 2)
@@ -40,27 +42,27 @@ def service():
                 mydict["serialNumber"] = drone.findtext("serialNumber")
                 mydict["datetime"] = datetime.strptime(capture.get("snapshotTimestamp"), "%Y-%m-%dT%H:%M:%S.%fZ")
                 mydict["distance"] = distance
-                pilot_info.append(mydict)
+                mylist.append(mydict)
 
         # stored the needed relative information of the pilot
-        for i in pilot_info:
-            serialNumber_url = urlopen("https://assignments.reaktor.com/birdnest/pilots/" + i["serialNumber"])
-            data_json = json.loads(serialNumber_url.read())
+        for i in mylist:
+            serial_number_url = urlopen("https://assignments.reaktor.com/birdnest/pilots/" + i["serialNumber"])
+            data_json = json.loads(serial_number_url.read())
             i["firstName"] = data_json["firstName"]
             i["lastName"] = data_json["lastName"]
             i["email"] = data_json["email"]
             i["phoneNumber"] = data_json["phoneNumber"]
 
-        # find out the closest distance
+            pilot_info[i["serialNumber"]] = i
+
+        # store the pilots info who violated the rule within 10 minutes
         if len(pilot_info) > 0:
-            new_pilot_info = []
-            latest_snapshot_time = pilot_info[-1]["datetime"]
+            new_pilot_info = {}
             for i in pilot_info:
-                if latest_snapshot_time - i["datetime"] < timedelta(minutes=10):
-                    new_pilot_info.append(i)
+                if latest_snapshot_time - pilot_info[i]["datetime"] <= timedelta(minutes=10):
+                    new_pilot_info[i] = pilot_info[i]
 
             pilot_info = new_pilot_info
-        return pilot_info, closest_distance
 
 
 @app.route('/')
@@ -70,7 +72,7 @@ def webpage():
 
 
 @app.route('/update', methods=["GET"])
-# update part of the webpage content
+# update the pilots info who violated the rule
 def update():
     with data_lock:
         return jsonify({"pilot_info": pilot_info, "closest_distance": closest_distance})
@@ -79,3 +81,5 @@ def update():
 _scheduler = BackgroundScheduler()
 _scheduler.add_job(service, "interval", seconds=2)
 _scheduler.start()
+
+

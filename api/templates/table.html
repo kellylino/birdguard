@@ -18,7 +18,7 @@
 
 <h1 style="text-align: center">This webpage displays the pilots information who recently violated the NDZ perimeter within 10 minutes</h1>
 <hr>
-<p id="distance"></p>
+<p id="distance" style="text-align: center"></p>
 
 <table style="width:100%">
     <tr>
@@ -44,9 +44,10 @@
             let pilot_info = data["pilot_info"];
             let closest_distance = data["closest_distance"];
 
-            if (pilot_info.length > 0){
+            if (Object.keys(pilot_info).length > 0){
             let text = '';
-            for (let i = 0; i < pilot_info.length; i++){
+
+            for (let i in pilot_info){
                 text += '<tr>' +
                     '<td style="text-align:center;">' + pilot_info[i]["datetime"] + '</td>' +
                     '<td style="text-align:center;">' + pilot_info[i]["firstName"] + '</td>' +
@@ -57,7 +58,7 @@
             }
             document.getElementById("demo").innerHTML = text;
             document.getElementById("distance").innerHTML = 'The closest confirmed distance to the nest was '
-                + '<strong>' + closest_distance + '</strong>' + ' meters';
+                + '<strong style="font-size: larger">' + closest_distance + '</strong>' + ' meters';
             }else {
                 document.getElementById("distance").innerHTML = 'There are no pilots violating the NDZ perimeter within 10 minutes yet';
             }
